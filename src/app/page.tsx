@@ -1,4 +1,4 @@
-import StoryGenerator from '@/components/StoryGenerator'
+import StoryGenerator from '@/components/story-generator'
 
 export default function Home() {
   return (

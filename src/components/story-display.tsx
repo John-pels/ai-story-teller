@@ -1,8 +1,8 @@
 'use client'
 
+import { useEffect, useRef, useState } from 'react'
 import { Button, Card, CardContent, CardFooter } from '@/components/ui'
 import { ArrowLeft, ArrowRight, Volume2, VolumeX } from 'lucide-react'
-import { useEffect, useRef, useState } from 'react'
 
 interface StoryDisplayProps {
   story: string
@@ -16,7 +16,8 @@ export default function StoryDisplay({ story }: StoryDisplayProps) {
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null)
 
   useEffect(() => {
-    setPages(story.split('\n\n'))
+    const processedPages = story.split('\n\n')
+    setPages(processedPages)
   }, [story])
 
   useEffect(() => {
@@ -68,6 +69,8 @@ export default function StoryDisplay({ story }: StoryDisplayProps) {
     }
   }
 
+  const estimatedTotalMinutes = Math.ceil(pages.join(' ').split(' ').length / 200)
+
   return (
     <Card className="mt-4">
       <CardContent className="p-6">
@@ -81,32 +84,51 @@ export default function StoryDisplay({ story }: StoryDisplayProps) {
                 </span>
               </p>
             ) : (
-              <p className="text-lg">{pages[currentPage]}</p>
+              <div className="text-lg">
+                {pages[currentPage]?.split('\n').map((line, index) => (
+                  <p key={index} className={index === 0 ? "font-bold" : ""}>
+                    {line.replace(/^\*\*(.*?)\*\*/, '$1')}
+                  </p>
+                ))}
+              </div>
             )}
           </div>
         </div>
       </CardContent>
-      <CardFooter className="flex justify-between">
-        <Button onClick={handlePrevPage} disabled={currentPage === 0}>
-          <ArrowLeft className="mr-2 h-4 w-4" /> Previous
-        </Button>
-        <Button
-          onClick={handleTextToSpeech}
-          aria-label={isSpeaking ? 'Stop speaking' : 'Start speaking'}
-        >
-          {isSpeaking ? (
-            <VolumeX className="mr-2 h-4 w-4" />
-          ) : (
-            <Volume2 className="mr-2 h-4 w-4" />
-          )}
-          {isSpeaking ? 'Stop' : 'Read Aloud'}
-        </Button>
-        <Button
-          onClick={handleNextPage}
-          disabled={currentPage === pages.length - 1}
-        >
-          Next <ArrowRight className="ml-2 h-4 w-4" />
-        </Button>
+      <CardFooter className="flex flex-col space-y-4">
+        <div className="flex flex-wrap justify-between w-full gap-2">
+          <Button
+            onClick={handlePrevPage}
+            disabled={currentPage === 0}
+            className="flex-grow sm:flex-grow-0"
+          >
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            <span className="hidden sm:inline">Previous</span>
+          </Button>
+          <Button
+            onClick={handleTextToSpeech}
+            aria-label={isSpeaking ? 'Stop speaking' : 'Start speaking'}
+            className="flex-grow sm:flex-grow-0"
+          >
+            {isSpeaking ? (
+              <VolumeX className="mr-2 h-4 w-4" />
+            ) : (
+              <Volume2 className="mr-2 h-4 w-4" />
+            )}
+            <span className="hidden sm:inline">{isSpeaking ? 'Stop' : 'Read Aloud'}</span>
+          </Button>
+          <Button
+            onClick={handleNextPage}
+            disabled={currentPage === pages.length - 1}
+            className="flex-grow sm:flex-grow-0"
+          >
+            <span className="hidden sm:inline">Next</span>
+            <ArrowRight className="ml-2 h-4 w-4" />
+          </Button>
+        </div>
+        <div className="text-sm text-muted-foreground w-full text-center">
+          Page {currentPage + 1} of {pages.length} | Estimated reading time: {estimatedTotalMinutes} minutes
+        </div>
       </CardFooter>
     </Card>
   )
