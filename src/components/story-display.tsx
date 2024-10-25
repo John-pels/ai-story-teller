@@ -62,7 +62,7 @@ export default function StoryDisplay({ story }: StoryDisplayProps) {
               onChange={handleVoiceChange}
               className="w-full sm:w-auto text-sm p-2 border rounded bg-background"
             >
-              {availableVoices.map(voice => (
+              {availableVoices.map((voice) => (
                 <option key={voice.name} value={voice.name}>
                   {voice.name} ({voice.lang})
                 </option>
