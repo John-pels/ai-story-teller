@@ -1,12 +1,18 @@
 'use client'
 
-import { useState } from 'react'
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui"
-import { AlertCircle } from "lucide-react"
 import StoryDisplay from '@/components/story-display'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui'
+import { Button } from '@/components/ui/button'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { AlertCircle } from 'lucide-react'
+import { useState } from 'react'
 
 export default function StoryGenerator() {
   const [theme, setTheme] = useState('')
@@ -48,7 +54,9 @@ export default function StoryGenerator() {
       <Card>
         <CardHeader>
           <CardTitle>Generate a Story</CardTitle>
-          <CardDescription>Enter an African folklore theme or character to generate a story.</CardDescription>
+          <CardDescription>
+            Enter an African folklore theme or character to generate a story.
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
